@@ -1,13 +1,20 @@
 library simple_hashtag;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class SimpleHashTag {
-  SimpleHashTag();
+  SimpleHashTag({
+    this.textColor = Colors.black38,
+    this.hashTagColor = Colors.blue,
+  });
+
+  final Color? textColor;
+  final Color? hashTagColor;
 
   /// Regular expressions for hashtags
   ///
-  /// Regular expression corresponding to [#{Arbitrary string}　]
+  /// Regular expression corresponding to [#{Arbitrary string} ]
   /// A single-byte space must always be left after any string
   ///
   /// ```dart
@@ -15,18 +22,18 @@ class SimpleHashTag {
   /// ```
   final _tagRegExp = RegExp(r'#([^\s]+)\s');
 
-  List<Widget> add(String message) {
+  List<String> _splitHashTags(String message) {
     final tagMatches = _tagRegExp.allMatches(message);
 
     final messages = <String>[];
-    final contents = <Widget>[];
+
     var textEnd = '';
     var count = 0;
 
     for (final tagMatch in tagMatches) {
       final tag = message.substring(tagMatch.start, tagMatch.end);
 
-      List<String> text;
+      var text = [];
 
       if (count == 0) {
         text = message.split(tag);
@@ -48,47 +55,30 @@ class SimpleHashTag {
       messages.add(textEnd);
     }
 
-    // messagesにハッシュタグで分割した文字列が配列で格納されている
-    // ハッシュタグをタップした時のcallbackを設定する
+    return messages;
+  }
+
+  RichText add(String message, Function(String tag) onTapHashTag) {
+    final contents = <TextSpan>[];
+    final texts = RichText(text: TextSpan(children: contents));
+    final messages = _splitHashTags(message);
 
     for (final list in messages) {
       if (_tagRegExp.hasMatch(list)) {
         contents.add(
-          InkWell(
-            onTap: () async {
-              // await Navigator.push<void>(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) {
-              //       return TagPage(tag: list);
-              //     },
-              //   ),
-              // );
-            },
-            child: Text(
-              list,
-              style: const TextStyle(color: Colors.blue),
-            ),
+          TextSpan(
+            text: list,
+            style: const TextStyle(color: Colors.blue),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                onTapHashTag(list);
+              },
           ),
         );
       } else {
-        contents.add(
-          Flexible(
-            child: Text(
-              list,
-              style: const TextStyle(color: Colors.black),
-            ),
-          ),
-        );
+        contents.add(TextSpan(text: list, style: TextStyle(color: textColor)));
       }
     }
-
-    return contents;
+    return texts;
   }
 }
-
-
-/// 作るメソッド一覧
-/// タグのみを抽出してくれる
-/// Wrapで包んで返却
-/// Wrapを包まないでTextとRichTextのリストで返却してくれる
