@@ -3,9 +3,11 @@ library simple_hashtag;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+/// SimpleHashTag is a package that generates hashtags from strings.
+/// By passing a string, a string starting with the specified trigger is hashtagged and returned as RichText.
+
 class SimpleHashTag {
   SimpleHashTag({
-    /// Default HashTag [#]
     this.startTrigger = '#',
     this.endTrigger = ' ',
     this.textColor = Colors.black38,
@@ -14,29 +16,31 @@ class SimpleHashTag {
     this.hashTagFontSize = 14,
   });
 
+  /// Specify the string that starts the tag
+  /// By default, [#] is set.
   final String? startTrigger;
+
+  /// Specify the string that ends the tag
+  /// By default, [ ](half-width space) is set.
   final String? endTrigger;
 
+  /// Normal string color
   final Color? textColor;
+
+  /// Color of string to be hashtagged
   final Color? hashTagColor;
 
+  /// Normal string text size
   final double? textFontSize;
+
+  /// Text size of string to be hashtagged
   final double? hashTagFontSize;
 
-  /// Regular expressions for hashtags
-  ///
-  /// Regular expression corresponding to [#{Arbitrary string} ]
-  /// A single-byte space must always be left after any string
-  ///
-  /// ```dart
-  /// decToHex(16) == '10'
-  /// ```
-  /// startTriggerとendTriggerを作成する
-
-  late final _pattern = "$startTrigger([^\\s]+)\\s";
+  late final _pattern = "$startTrigger([^\\s]+)$endTrigger";
   late final _tagRegExp = RegExp(_pattern);
 
-  List<String> _splitHashTags(String message) {
+  /// Methods that return a list ([string]) with tags separated from the rest of the string
+  List<String> _splitHashTags({required String message}) {
     final tagMatches = _tagRegExp.allMatches(message);
 
     final messages = <String>[];
@@ -72,32 +76,46 @@ class SimpleHashTag {
     return messages;
   }
 
-  RichText createContents(String message, Function(String tag)? onTapHashTag) {
-    final contents = <TextSpan>[];
-    final texts = RichText(text: TextSpan(children: contents));
-    final messages = _splitHashTags(message);
+  RichText generateHashTag(String text, Function(String hashTag)? onTap) {
+    final textSpans = <TextSpan>[];
+    final contents = RichText(text: TextSpan(children: textSpans));
 
-    for (final list in messages) {
-      if (_tagRegExp.hasMatch(list)) {
-        contents.add(
+    final list = _splitHashTags(message: text);
+
+    if (list.isEmpty) {
+      textSpans.add(
+        TextSpan(
+          text: text,
+          style: TextStyle(
+            color: textColor,
+            fontSize: textFontSize,
+          ),
+        ),
+      );
+      return contents;
+    }
+
+    for (final tag in list) {
+      if (_tagRegExp.hasMatch(tag)) {
+        textSpans.add(
           TextSpan(
-            text: list,
+            text: tag,
             style: TextStyle(
               color: hashTagColor,
               fontSize: hashTagFontSize,
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                if (onTapHashTag != null) {
-                  onTapHashTag(list);
+                if (onTap != null) {
+                  onTap(tag.trim());
                 }
               },
           ),
         );
       } else {
-        contents.add(
+        textSpans.add(
           TextSpan(
-            text: list,
+            text: tag,
             style: TextStyle(
               color: textColor,
               fontSize: textFontSize,
@@ -106,6 +124,6 @@ class SimpleHashTag {
         );
       }
     }
-    return texts;
+    return contents;
   }
 }
