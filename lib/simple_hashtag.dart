@@ -5,12 +5,23 @@ import 'package:flutter/material.dart';
 
 class SimpleHashTag {
   SimpleHashTag({
+    /// Default HashTag [#]
+    this.startTrigger = '#',
+    this.endTrigger = ' ',
     this.textColor = Colors.black38,
     this.hashTagColor = Colors.blue,
+    this.textFontSize = 14,
+    this.hashTagFontSize = 14,
   });
+
+  final String? startTrigger;
+  final String? endTrigger;
 
   final Color? textColor;
   final Color? hashTagColor;
+
+  final double? textFontSize;
+  final double? hashTagFontSize;
 
   /// Regular expressions for hashtags
   ///
@@ -20,7 +31,10 @@ class SimpleHashTag {
   /// ```dart
   /// decToHex(16) == '10'
   /// ```
-  final _tagRegExp = RegExp(r'#([^\s]+)\s');
+  /// startTriggerとendTriggerを作成する
+
+  late final _pattern = "$startTrigger([^\\s]+)\\s";
+  late final _tagRegExp = RegExp(_pattern);
 
   List<String> _splitHashTags(String message) {
     final tagMatches = _tagRegExp.allMatches(message);
@@ -58,7 +72,7 @@ class SimpleHashTag {
     return messages;
   }
 
-  RichText add(String message, Function(String tag) onTapHashTag) {
+  RichText createContents(String message, Function(String tag)? onTapHashTag) {
     final contents = <TextSpan>[];
     final texts = RichText(text: TextSpan(children: contents));
     final messages = _splitHashTags(message);
@@ -68,15 +82,28 @@ class SimpleHashTag {
         contents.add(
           TextSpan(
             text: list,
-            style: const TextStyle(color: Colors.blue),
+            style: TextStyle(
+              color: hashTagColor,
+              fontSize: hashTagFontSize,
+            ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                onTapHashTag(list);
+                if (onTapHashTag != null) {
+                  onTapHashTag(list);
+                }
               },
           ),
         );
       } else {
-        contents.add(TextSpan(text: list, style: TextStyle(color: textColor)));
+        contents.add(
+          TextSpan(
+            text: list,
+            style: TextStyle(
+              color: textColor,
+              fontSize: textFontSize,
+            ),
+          ),
+        );
       }
     }
     return texts;
