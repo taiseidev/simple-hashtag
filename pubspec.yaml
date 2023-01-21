@@ -1,10 +1,10 @@
 name: simple_hashtag
-description: A new Flutter package project.
+description: SimpleHashTag is a package that generates hashtags from strings.
 version: 0.0.1
-homepage:
+homepage: https://github.com/taiseidev/simple-hashtag
 
 environment:
-  sdk: '>=2.18.5 <3.0.0'
+  sdk: ">=2.18.5 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:

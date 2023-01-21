@@ -11,7 +11,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -100,6 +99,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
 }
 
 class DetailPage extends StatelessWidget {
@@ -113,9 +118,7 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('DetailPage'),
-      ),
+      appBar: AppBar(title: const Text('DetailPage')),
       body: Center(
         child: Text('Moved to the $tag screen.'),
       ),

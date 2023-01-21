@@ -1,39 +1,46 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+SimpleHashTag is a package that generates hashtags from strings.<br>
+By passing a string, a string starting with the specified trigger is hashtagged and returned as RichText.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+You can use SimpleHashTag to config text:
 
 ```dart
-const like = 'sample';
+late final SimpleHashTag _hashTag;
+
+_hashTag = SimpleHashTag();
 ```
 
-## Additional information
+properties:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+|  name  |  description  |
+| ---- | ---- |
+|  startTrigger  |    Specify the string that starts the tag. By default, [#] is set.  |s
+|  endTrigger  |    Specify the string that ends the tag. By default, [ ](half-width space) is set.  |
+|  textColor  |   Normal text color  |
+|  hashTagColor  |  Color of text to be hashtagged  |
+|  textFontSize  |  Normal text size  |
+|  hashTagFontSize  |  Text size to be hashtagged  |
+
+<br>
+
+Set the text to be hashtagged as the first argument of the generateHashTag method and the callback when the hashtag is tapped as the second argument. RichText is returned as the return value, so it can be used as a widget as it is.
+
+<br>
+
+```dart
+text = _hashTag.generateHashTag(
+    controller.text,
+        (hashTag) {
+        // move to Specific tag page
+         Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DetailPage(tag: hashTag),
+            ),
+        );
+    },
+);
+```
