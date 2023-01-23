@@ -5,15 +5,21 @@ By passing a string, a string starting with the specified trigger is hashtagged 
 
 ## Usage
 
-You can use SimpleHashTag to config text:
+You can use SimpleHashTag class to config text:
 
 ```dart
-late final SimpleHashTag _hashTag;
-
-_hashTag = SimpleHashTag();
+// Configure settings here
+final _hashTag = SimpleHashTag();
 ```
 
-properties:
+For example.
+```dart
+// Configure settings here
+final _hashTag = SimpleHashTag(textColor: Colors.red, hashTagColor: Colors.yellow);
+```
+
+The color of strings set as hashtags by the above settings will be yellow, and other strings will be red.
+Currently available properties are as follows
 
 |  name  |  description  |
 | ---- | ---- |
