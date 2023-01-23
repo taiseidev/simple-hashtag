@@ -5,6 +5,8 @@ By passing a string, a string starting with the specified trigger is hashtagged 
 
 ## Usage
 
+<img src='https://user-images.githubusercontent.com/91307335/214048265-ecd1fb4a-47df-46c3-b0aa-eae696655c2a.png' width='350'>
+
 You can use SimpleHashTag class to config text:
 
 ```dart
@@ -50,3 +52,6 @@ text = _hashTag.generateHashTag(
     },
 );
 ```
+
+
+https://user-images.githubusercontent.com/91307335/214048476-2d259b89-cf45-4695-9c3c-41030cb9e986.mov
