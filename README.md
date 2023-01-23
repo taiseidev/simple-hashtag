@@ -18,7 +18,7 @@ For example.
 final _hashTag = SimpleHashTag(textColor: Colors.red, hashTagColor: Colors.yellow);
 ```
 
-The color of strings set as hashtags by the above settings will be yellow, and other strings will be red.
+The color of strings set as hashtags by the above settings will be yellow, and other strings will be red.<br>
 Currently available properties are as follows
 
 |  name  |  description  |
